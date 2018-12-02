@@ -32,10 +32,10 @@
 #define ONE_WIRE_PIN PB9
 #define ETH_RST_PIN PB0
 #define ANALOG_TEMPS 1
-#define TEMPERATURE_PRECISION 11
-const int a_temp_pin[ANALOG_TEMPS] = {PB1, PA1};
+const int a_temp_pin[ANALOG_TEMPS] = {PB1};
 #define RELAY_PIN PA0
 #define MAX_DS18B20 3
+#define TEMPERATURE_PRECISION 11
 
 // resistance at 25 degrees C
 #define THERMISTOR_NOMINAL 10000
