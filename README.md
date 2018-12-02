@@ -1,13 +1,21 @@
-# EthernetRelayTemp
+# STM32F103C8 (BluePill) based temperature node with relay
 [![Build Status](https://travis-ci.org/pilotak/ethernet-relay-temp.svg?branch=master)](https://travis-ci.org/pilotak/ethernet-relay-temp)
-
-STM32F103C8 (BluePill) based temperature node with relay with MQTT output/control
 
 ## Features
 - variable power supply: 5-15V (depends on relay coil)
 - 1-wire bus for DS18B20 temperature sensors
 - 1x thermistor input
 - 1x SPST relay with ARC suppression
+- controlled over MQTT
+
+## MQTT topics
+- `nameOfBoard/dtemp/*` = dallas temperature *(aterisk is temp address)*
+- `nameOfBoard/atemp/*` = thermistor temperature *(aterisk is analog temp index)*
+- `nameOfBoard/status` = online status
+- `nameOfBoard/err` = dallas error, tells you index of the bad sensor
+- `nameOfBoard/count` = number dallas sensors found
+- `nameOfBoard/relay/0` = state of relay
+- `nameOfBoard/relay/0/set` = command for relay, can be either `0` or `1`
 
 ## BOM
 | Qty | Component | Value | Package |

@@ -10,11 +10,11 @@
 #define MQTT_PORT     1883
 
 #define MQTT_BASE_TOPIC MQTT_ID
-#define MQTT_TOPIC_DALLAS_TEMP MQTT_BASE_TOPIC"/dtemp"  // will result ie. someName/temp/* where aterisk is temp id
-#define MQTT_TOPIC_ANALOG_TEMP MQTT_BASE_TOPIC"/atemp"  // will result ie. someName/atemp/* where aterisk is temp index
-#define MQTT_TOPIC_WILL MQTT_BASE_TOPIC"/status"
-#define MQTT_TOPIC_ERROR MQTT_BASE_TOPIC"/err"
-#define MQTT_TOPIC_COUNT MQTT_BASE_TOPIC"/count"
+#define MQTT_TOPIC_DALLAS_TEMP MQTT_BASE_TOPIC"/dtemp"  // will result ie. someName/dtemp/* where aterisk is temp address
+#define MQTT_TOPIC_ANALOG_TEMP MQTT_BASE_TOPIC"/atemp"  // will result ie. someName/atemp/* where aterisk is analog temp index
+#define MQTT_TOPIC_WILL MQTT_BASE_TOPIC"/status"        // will result ie. someName/status
+#define MQTT_TOPIC_ERROR MQTT_BASE_TOPIC"/err"          // will result ie. someName/err
+#define MQTT_TOPIC_COUNT MQTT_BASE_TOPIC"/count"        // will result ie. someName/count
 #define MQTT_STATUS_ON "1"
 #define MQTT_STATUS_OFF "0"
 #define MQTT_RELAY_TOPIC_STATE MQTT_BASE_TOPIC"/relay/0"   // will result ie. someName/relay/0
