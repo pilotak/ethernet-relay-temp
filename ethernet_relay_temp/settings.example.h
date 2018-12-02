@@ -14,6 +14,7 @@
 #define MQTT_TOPIC_ANALOG_TEMP MQTT_BASE_TOPIC"/atemp"  // will result ie. someName/atemp/* where aterisk is temp index
 #define MQTT_TOPIC_WILL MQTT_BASE_TOPIC"/status"
 #define MQTT_TOPIC_ERROR MQTT_BASE_TOPIC"/err"
+#define MQTT_TOPIC_COUNT MQTT_BASE_TOPIC"/count"
 #define MQTT_STATUS_ON "1"
 #define MQTT_STATUS_OFF "0"
 #define MQTT_RELAY_TOPIC_STATE MQTT_BASE_TOPIC"/relay/0"   // will result ie. someName/relay/0
@@ -30,7 +31,7 @@
 #define RELAY_PIN PA0
 #define ONE_WIRE_PIN PB9
 #define ETH_RST_PIN PB0
-#define ANALOG_TEMPS 2
+#define ANALOG_TEMPS 1
 #define TEMPERATURE_PRECISION 11
 const int a_temp_pin[ANALOG_TEMPS] = {PB1, PA1};
 #define RELAY_PIN PA0

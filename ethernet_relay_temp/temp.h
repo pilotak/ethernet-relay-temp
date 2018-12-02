@@ -18,8 +18,6 @@ const char * hex = "0123456789ABCDEF";
 uint8_t ds12b20_count = 0;
 
 void tempSetup() {
-    bool error = false;
-
     for (uint8_t i = 0; i < ANALOG_TEMPS; i++) {
         pinMode(a_temp_pin[i], INPUT_ANALOG);
         aHysteresis[i].set(10);
@@ -37,18 +35,12 @@ void tempSetup() {
 
     ds12b20_count = (ds12b20_count > MAX_DS18B20 ? MAX_DS18B20 : ds12b20_count);  // prevent overflow
 
-    if (ds12b20_count == 0) {
-        #if defined(ENABLE_DEBUG)
-        debugPort.println("Sending message: error, no dallas devices");
-        #endif
+    char data[2];
+    data[0] = ds12b20_count + '0';
+    data[1] = 0;
+    sendData(MQTT_TOPIC_COUNT, data, true);
 
-        char data[2];
-        data[0] = MAX_DS18B20 + '0';
-        data[1] = 0;
-        sendData(MQTT_TOPIC_ERROR, data, true);
-        error = true;
-
-    } else {
+    if (ds12b20_count != 0) {
         for (uint8_t i = 0; i < ds12b20_count; i++) {
             dHysteresis[i].set(10);
             dHysteresis[i].prev(LONG_MIN);
@@ -67,8 +59,6 @@ void tempSetup() {
                 data[1] = i + '0';
                 data[2] = 0;
                 sendData(MQTT_TOPIC_ERROR, data, true);
-                error = true;
-
 
                 #if defined(ENABLE_DEBUG)
                 debugPort.print("Sending message: Dallas ");
@@ -79,17 +69,6 @@ void tempSetup() {
 
             iwdg_feed();
         }
-    }
-
-    if (!error) {
-        #if defined(ENABLE_DEBUG)
-        debugPort.println("Sending message: no error");
-        #endif
-
-        char data[2];
-        data[0] = ds12b20_count + '0';
-        data[1] = 0;
-        sendData(MQTT_TOPIC_ERROR, data, true);
     }
 }
 
@@ -113,7 +92,14 @@ void readTemp() {
         debugPort.println(tempC, 3);
         #endif
 
-        dHysteresis[i].add(dAverage[i].add(static_cast<int32_t>(tempC * 100)));
+        if (tempC != -127.0) {
+            dHysteresis[i].add(dAverage[i].add(static_cast<int32_t>(tempC * 100)));
+
+        } else {
+            dHysteresis[i].prev(LONG_MIN);
+            dAverage[i].reset();
+        }
+
         iwdg_feed();
     }
 

@@ -1,0 +1,20 @@
+language: python
+python:
+  - "2.7"
+
+sudo: false
+cache:
+  directories:
+    - "~/.platformio"
+
+install:
+  - pip install -U platformio
+  - platformio update
+
+script:
+  - platformio run
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
