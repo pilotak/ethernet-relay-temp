@@ -13,9 +13,11 @@
 - `nameOfBoard/atemp/*` = thermistor temperature *(aterisk is analog temp index)*
 - `nameOfBoard/status` = online status
 - `nameOfBoard/err` = dallas error, tells you index of the bad sensor
-- `nameOfBoard/count` = number dallas sensors found
+- `nameOfBoard/count` = number of dallas sensors found
 - `nameOfBoard/relay/0` = state of relay
 - `nameOfBoard/relay/0/set` = command for relay, can be either `0` or `1`
+
+![photo](./images/photo.jpg)
 
 ## BOM
 | Qty | Component | Value | Package |
