@@ -23,7 +23,7 @@ SOFTWARE.
 #include "settings.example.h"
 #include "watchdog.h"
 
-void sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
+bool sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
 
 #include "temp.h"
 #include "ethernet.h"
@@ -34,8 +34,6 @@ uint32_t previousReadMillis = 0;
 uint32_t previousWdtMillis = 0;
 
 void setup() {
-    wdtSetup();
-
     #if defined(ENABLE_DEBUG)
     debugPort.begin(115200);
     #endif
@@ -51,6 +49,14 @@ void setup() {
     #endif
 
     ethSetup();
+    wdtSetup();
+
+    // setup mqtt client
+    mqttClient.setClient(ethClient);
+    mqttClient.setServer(MQTT_HOST, MQTT_PORT);
+    mqttClient.setCallback(mqttMsg);
+    mqttConnect();
+
     tempSetup();
 
     previousSendMillis = previousWillMillis = millis();
@@ -69,7 +75,10 @@ void loop() {
 
     if (millis() - previousWillMillis >= MQTT_STATUS_SEND_INTERVAL) {
         previousWillMillis = millis();
-        sendData(MQTT_TOPIC_WILL, MQTT_STATE_ON, true);
+
+        if (!sendData(MQTT_TOPIC_WILL, MQTT_STATE_ON, true)) {
+            mqttConnect();
+        }
     }
 
     if (millis() - previousSendMillis >= SENSORS_SEND_INTERVAL) {

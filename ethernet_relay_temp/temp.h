@@ -12,7 +12,7 @@ MovingAverage <int32_t, 32> dAverage[MAX_DS18B20];
 Hysteresis <int32_t> aHysteresis[ANALOG_TEMPS];
 MovingAverage <int32_t, 32> aAverage[ANALOG_TEMPS];
 
-char address_string[MAX_DS18B20][8];
+char address_string[MAX_DS18B20][17];
 const char * hex = "0123456789ABCDEF";
 
 uint8_t ds12b20_count = 0;
@@ -52,6 +52,8 @@ void tempSetup() {
                     address_string[i][(j << 1)] = hex[((uint8_t)dallasAddresses[i][j] >> 4) & 0xF];
                     address_string[i][(j << 1) + 1] = hex[dallasAddresses[i][j] & 0xF];
                 }
+
+                address_string[i][16] = 0;  // terminate string
 
             } else {
                 char data[3];

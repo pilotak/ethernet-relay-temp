@@ -1,7 +1,7 @@
 #define SENSORS_SEND_INTERVAL 32000  // ms
 #define SENSORS_READ_INTERVAL 1000  // ms
 #define MQTT_STATUS_SEND_INTERVAL 30000  // ms
-#define WDT_INTERVAL 2000 // ms
+#define WDT_INTERVAL 2000 // ms, feed the dog interval; for setup see watchdog.h
 
 #define MQTT_ID       "someName"
 #define MQTT_HOST     "192.168.0.1"

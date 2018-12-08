@@ -5,6 +5,7 @@ EthernetClient ethClient;
 PubSubClient mqttClient;
 
 uint8_t mac[6];
+uint8_t mqtt_fail_counter = 0;
 
 void mqttMsg(char* topic, uint8_t* payload, unsigned int length) {
     #if defined(ENABLE_DEBUG)
@@ -34,14 +35,44 @@ void mqttMsg(char* topic, uint8_t* payload, unsigned int length) {
 }
 
 void mqttConnect() {
+    iwdg_feed();
+
+    #if defined(ENABLE_DEBUG)
+    debugPort.print("Connecting to MQTT (");
+    debugPort.print(MQTT_HOST);
+    debugPort.print(")...");
+    #endif
+
     if (mqttClient.connect(MQTT_ID, MQTT_USER, MQTT_PASS, MQTT_TOPIC_WILL, 0, true, MQTT_STATUS_OFF)) {
         #if defined(ENABLE_DEBUG)
-        debugPort.println("MQTT connected");
+        debugPort.println("connected");
         #endif
+
+        mqtt_fail_counter = 0;
 
         sendData(MQTT_TOPIC_WILL, MQTT_STATUS_ON, true);
         mqttClient.subscribe(MQTT_RELAY_TOPIC_SET);
+
+    } else {
+        #if defined(ENABLE_DEBUG)
+        debugPort.println("failed");
+        delay(100);
+        #endif
+        mqtt_fail_counter++;
+
+        if (mqtt_fail_counter > MQTT_MAX_FAILED_CONNECTIONS) {
+            nvic_sys_reset();
+        }
     }
+
+    iwdg_feed();
+}
+
+String DisplayAddress(IPAddress address) {
+    return String(address[0]) + "." +
+           String(address[1]) + "." +
+           String(address[2]) + "." +
+           String(address[3]);
 }
 
 void ethSetup() {
@@ -67,28 +98,20 @@ void ethSetup() {
         #endif
         digitalWrite(INFO_LED, LOW);
 
-        while (1) {}  // wait for watchdog to reset
+        nvic_sys_reset();
 
     } else {
         #if defined(ENABLE_DEBUG)
-        debugPort.println("DHCP ok");
+        debugPort.print("DHCP ok, address: ");
+        debugPort.println(DisplayAddress(Ethernet.localIP()));
         #endif
     }
-
-    iwdg_feed();
-
-    // setup mqtt client
-    mqttClient.setClient(ethClient);
-    mqttClient.setServer(MQTT_HOST, MQTT_PORT);
-    mqttClient.setCallback(mqttMsg);
-    mqttConnect();
 }
 
-void sendData(const char * topic, const char * data, bool retain) {
+bool sendData(const char * topic, const char * data, bool retain) {
     if (!mqttClient.connected()) {
-        mqttConnect();
-
-    } else {
-        mqttClient.publish(topic, data, retain);
+        return false;
     }
+
+    return mqttClient.publish(topic, data, retain);
 }

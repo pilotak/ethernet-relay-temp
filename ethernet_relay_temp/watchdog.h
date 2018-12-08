@@ -18,8 +18,8 @@
 // reload = ((40000 / 1000) * 100) / 32;  (40kHz watchdog clock /divided by 1000ms *100 miliseconds desired timeout / 32 prescaler)
 
 #define WDT_PRESCALER IWDG_PRE_256  // IWDG_PRE_4, IWDG_PRE_8, IWDG_PRE_16, IWDG_PRE_32, IWDG_PRE_64, IWDG_PRE_128, IWDG_PRE_256
-#define WDT_RELOAD 1250
+#define WDT_RELOAD 4062
 
 void wdtSetup() {
-	iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
+    iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
 }
