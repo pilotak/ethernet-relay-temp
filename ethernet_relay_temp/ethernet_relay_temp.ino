@@ -19,9 +19,8 @@ SOFTWARE.
 */
 
 #include <climits>
-#include <Wire.h>
+#include <IWatchdog.h>
 #include "settings.example.h"
-#include "watchdog.h"
 
 bool sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
 
@@ -53,7 +52,8 @@ void setup() {
 #endif
 
     ethSetup();
-    wdtSetup();
+
+    IWatchdog.begin(IWDG_TIMEOUT_MAX);
 
     // setup mqtt client
     mqttClient.setClient(ethClient);

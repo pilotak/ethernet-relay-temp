@@ -108,7 +108,7 @@ void readTemp() {
     for (i = 0; i < ANALOG_TEMPS; i++) {
         adc = analogRead(a_temp_pin[i]);
 
-        if (adc < 4080) {
+        if (adc <= 4000) {
             adc = (4095 / adc) - 1;
             adc = A_TEMP_SERIES_RESISTOR / adc;
 
@@ -167,7 +167,12 @@ void sendTemp() {
             temp_float = static_cast<float>(temp) / 100.0;
         }
 
-        snprintf(data, sizeof(data), "%.1f", temp_float);
+        memset(data, 0, sizeof(data));
+
+        if (!isnan(temp_float)) {
+            dtostrf(temp_float, 3, 1, data);
+        }
+
         snprintf(topic, sizeof(topic), "%s/%s", MQTT_TOPIC_DALLAS_TEMP, address_string[i]);
         sendData(topic, data, true);
 
@@ -182,8 +187,14 @@ void sendTemp() {
             temp_float = static_cast<float>(temp) / 100.0;
         }
 
-        snprintf(data, sizeof(data), "%.1f", temp_float);
+        memset(data, 0, sizeof(data));
+
+        if (!isnan(temp_float)) {
+            dtostrf(temp_float, 3, 1, data);
+        }
         snprintf(topic, sizeof(topic), "%s/%u", MQTT_TOPIC_ANALOG_TEMP, i);
+
+        debugPort.println(data);
         sendData(topic, data, true);
 
         IWatchdog.reload();

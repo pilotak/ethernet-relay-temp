@@ -28,6 +28,8 @@
 
 #if defined(ENABLE_DEBUG)
     #define debugPort Serial2
+    #define DEBUG_TX PA2
+    #define DEBUG_RX PA3
 #endif
 
 #define RELAY_PIN PA0

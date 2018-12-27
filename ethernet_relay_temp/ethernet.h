@@ -55,6 +55,7 @@ void mqttConnect() {
 
         sendData(MQTT_TOPIC_WILL, MQTT_STATUS_ON, true);
         mqttClient.subscribe(MQTT_RELAY_TOPIC_SET);
+        mqttClient.subscribe(MQTT_TOPIC_RESTART);
 
     } else {
 #if defined(ENABLE_DEBUG)
