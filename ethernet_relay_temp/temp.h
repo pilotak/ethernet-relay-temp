@@ -27,11 +27,11 @@ void tempSetup() {
     sensors.begin();
     ds12b20_count = sensors.getDeviceCount();
 
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.print("Found ");
     debugPort.print(ds12b20_count, DEC);
     debugPort.println(" devices");
-    #endif
+#endif
 
     ds12b20_count = (ds12b20_count > MAX_DS18B20 ? MAX_DS18B20 : ds12b20_count);  // prevent overflow
 
@@ -62,11 +62,11 @@ void tempSetup() {
                 data[2] = 0;
                 sendData(MQTT_TOPIC_ERROR, data, true);
 
-                #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
                 debugPort.print("Sending message: Dallas ");
                 debugPort.print(i);
                 debugPort.println(" error");
-                #endif
+#endif
             }
 
             iwdg_feed();
@@ -87,12 +87,12 @@ void readTemp() {
     for (i = 0; i < ds12b20_count; i++) {
         float tempC = sensors.getTempC(dallasAddresses[i]);
 
-        #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
         debugPort.print("Dallas temp[");
         debugPort.print(i);
         debugPort.print("]: ");
         debugPort.println(tempC, 3);
-        #endif
+#endif
 
         if (tempC != -127.0) {
             dHysteresis[i].add(dAverage[i].add(static_cast<int32_t>(tempC * 100)));
@@ -120,12 +120,12 @@ void readTemp() {
             steinhart -= 273.15;                                // convert to C
 
 
-            #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
             debugPort.print("Analog temp[");
             debugPort.print(i);
             debugPort.print("]: ");
             debugPort.println(steinhart, 3);
-            #endif
+#endif
 
             aHysteresis[i].add(aAverage[i].add(static_cast<int32_t>(steinhart * 100.0)));
 
@@ -133,17 +133,17 @@ void readTemp() {
             aHysteresis[i].prev(LONG_MIN);
             aAverage[i].reset();
 
-            #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
             debugPort.print("Invalid ADC reading[");
             debugPort.print(i);
             debugPort.println("]");
-            #endif
+#endif
         }
     }
 
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.println();
-    #endif
+#endif
 }
 
 void sendTemp() {
@@ -153,9 +153,9 @@ void sendTemp() {
     int32_t temp;
     float temp_float;
 
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.println("Sending temperatures\n");
-    #endif
+#endif
 
     digitalWrite(INFO_LED, LOW);
 

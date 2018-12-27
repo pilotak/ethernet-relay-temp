@@ -8,45 +8,48 @@ uint8_t mac[6];
 uint8_t mqtt_fail_counter = 0;
 
 void mqttMsg(char* topic, uint8_t* payload, unsigned int length) {
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.print("Message arrived [");
     debugPort.print(topic);
     debugPort.println("] ");
-    #endif
+#endif
 
     if (strcmp(topic, MQTT_RELAY_TOPIC_SET) == 0) {
         if (payload[0] == MQTT_RELAY_ON[0]) {
-            #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
             debugPort.println("Turning relay ON");
-            #endif
+#endif
             digitalWrite(RELAY_PIN, HIGH);
 
             sendData(MQTT_RELAY_TOPIC_STATE, MQTT_RELAY_ON, true);
 
         } else if (payload[0] == MQTT_RELAY_OFF[0]) {
-            #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
             debugPort.println("Turning relay OFF");
-            #endif
+#endif
             digitalWrite(RELAY_PIN, LOW);
 
             sendData(MQTT_RELAY_TOPIC_STATE, MQTT_RELAY_OFF, true);
         }
+
+    } else if (strcmp(topic, MQTT_TOPIC_RESTART) == 0) {
+        nvic_sys_reset();
     }
 }
 
 void mqttConnect() {
     iwdg_feed();
 
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.print("Connecting to MQTT (");
     debugPort.print(MQTT_HOST);
     debugPort.print(")...");
-    #endif
+#endif
 
     if (mqttClient.connect(MQTT_ID, MQTT_USER, MQTT_PASS, MQTT_TOPIC_WILL, 0, true, MQTT_STATUS_OFF)) {
-        #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
         debugPort.println("connected");
-        #endif
+#endif
 
         mqtt_fail_counter = 0;
 
@@ -54,10 +57,10 @@ void mqttConnect() {
         mqttClient.subscribe(MQTT_RELAY_TOPIC_SET);
 
     } else {
-        #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
         debugPort.println("failed");
         delay(100);
-        #endif
+#endif
         mqtt_fail_counter++;
 
         if (mqtt_fail_counter > MQTT_MAX_FAILED_CONNECTIONS) {
@@ -93,18 +96,18 @@ void ethSetup() {
     mac[5] = (word0 & 0x000000ff);
 
     if (Ethernet.begin(mac) == 0) {
-        #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
         debugPort.println("Ethernet configuration using DHCP failed");
-        #endif
+#endif
         digitalWrite(INFO_LED, LOW);
 
         nvic_sys_reset();
 
     } else {
-        #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
         debugPort.print("DHCP ok, address: ");
         debugPort.println(DisplayAddress(Ethernet.localIP()));
-        #endif
+#endif
     }
 }
 

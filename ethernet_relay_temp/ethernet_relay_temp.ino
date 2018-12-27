@@ -34,9 +34,9 @@ uint32_t previousReadMillis = 0;
 uint32_t previousWdtMillis = 0;
 
 void setup() {
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.begin(115200);
-    #endif
+#endif
 
     pinMode(INFO_LED, OUTPUT);
     digitalWrite(INFO_LED, HIGH);
@@ -44,9 +44,9 @@ void setup() {
     pinMode(RELAY_PIN, OUTPUT);
     digitalWrite(RELAY_PIN, LOW);
 
-    #if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG)
     debugPort.println("Starting");
-    #endif
+#endif
 
     ethSetup();
     wdtSetup();

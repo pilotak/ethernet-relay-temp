@@ -21,6 +21,7 @@
 #define MQTT_RELAY_TOPIC_SET MQTT_RELAY_TOPIC_STATE"/set"  // will result ie. someName/relay/0/set
 #define MQTT_RELAY_ON "1"
 #define MQTT_RELAY_OFF "0"
+#define MQTT_TOPIC_RESTART MQTT_BASE_TOPIC"/restart"  // will result ie. someName/restart
 #define MQTT_MAX_FAILED_CONNECTIONS 10
 
 #define INFO_LED LED_BUILTIN

@@ -21,5 +21,5 @@
 #define WDT_RELOAD 4062
 
 void wdtSetup() {
-    iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
+	iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
 }
