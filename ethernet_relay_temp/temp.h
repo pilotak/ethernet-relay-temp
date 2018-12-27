@@ -19,11 +19,11 @@ uint8_t ds12b20_count = 0;
 
 void tempSetup() {
     for (uint8_t i = 0; i < ANALOG_TEMPS; i++) {
-        // pinMode(a_temp_pin[i], INPUT_ANALOG);
         aHysteresis[i].set(10);
         aHysteresis[i].prev(LONG_MIN);
     }
 
+    analogReadResolution(12);
     sensors.begin();
     ds12b20_count = sensors.getDeviceCount();
 
