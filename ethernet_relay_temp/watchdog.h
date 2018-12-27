@@ -1,4 +1,4 @@
-#include <libmaple/iwdg.h>
+#include <IWatchdog.h>
 
 /* Watchdog setting example
  *
@@ -21,5 +21,9 @@
 #define WDT_RELOAD 4062
 
 void wdtSetup() {
-	iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
+    // iwdg_init(WDT_PRESCALER, WDT_RELOAD);  // init WDT timer
+    IWatchdog.begin(25000000);
+
+    debugPort.print("WDT:");
+    debugPort.println(IWDG_TIMEOUT_MAX);
 }

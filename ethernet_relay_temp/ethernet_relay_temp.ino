@@ -20,7 +20,7 @@ SOFTWARE.
 
 #include <climits>
 #include <Wire.h>
-#include "settings.example.h"
+#include "settings.h"
 #include "watchdog.h"
 
 bool sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
@@ -32,6 +32,10 @@ uint32_t previousSendMillis = 0;
 uint32_t previousWillMillis = 0;
 uint32_t previousReadMillis = 0;
 uint32_t previousWdtMillis = 0;
+
+#if defined(ENABLE_DEBUG)
+    HardwareSerial debugPort(DEBUG_RX, DEBUG_TX);
+#endif
 
 void setup() {
 #if defined(ENABLE_DEBUG)
@@ -65,7 +69,7 @@ void setup() {
 void loop() {
     if (millis() - previousWdtMillis >= WDT_INTERVAL) {
         previousWdtMillis = millis();
-        iwdg_feed();
+        IWatchdog.reload();
     }
 
     if (millis() - previousReadMillis >= SENSORS_READ_INTERVAL) {
