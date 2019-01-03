@@ -21,9 +21,16 @@ void tempSetup() {
     for (uint8_t i = 0; i < ANALOG_TEMPS; i++) {
         aHysteresis[i].set(10);
         aHysteresis[i].prev(LONG_MIN);
+
+#if !defined(NEW_CORE)
+        pinMode(a_temp_pin[i], INPUT_ANALOG);
+#endif
     }
 
+#if defined(NEW_CORE)
     analogReadResolution(12);
+#endif
+
     sensors.begin();
     ds12b20_count = sensors.getDeviceCount();
 
@@ -69,7 +76,7 @@ void tempSetup() {
 #endif
             }
 
-            IWatchdog.reload();
+            wdtFeed();
         }
     }
 }
@@ -94,7 +101,7 @@ void readTemp() {
         debugPort.println(tempC, 3);
 #endif
 
-        if (tempC != -127.0) {
+        if (tempC >= -10) {
             dHysteresis[i].add(dAverage[i].add(static_cast<int32_t>(tempC * 100)));
 
         } else {
@@ -102,7 +109,7 @@ void readTemp() {
             dAverage[i].reset();
         }
 
-        IWatchdog.reload();
+        wdtFeed();
     }
 
     for (i = 0; i < ANALOG_TEMPS; i++) {
@@ -176,7 +183,7 @@ void sendTemp() {
         snprintf(topic, sizeof(topic), "%s/%s", MQTT_TOPIC_DALLAS_TEMP, address_string[i]);
         sendData(topic, data, true);
 
-        IWatchdog.reload();
+        wdtFeed();
     }
 
     for (i = 0; i < ANALOG_TEMPS; i++) {
@@ -192,12 +199,13 @@ void sendTemp() {
         if (!isnan(temp_float)) {
             dtostrf(temp_float, 3, 1, data);
         }
+
         snprintf(topic, sizeof(topic), "%s/%u", MQTT_TOPIC_ANALOG_TEMP, i);
 
         debugPort.println(data);
         sendData(topic, data, true);
 
-        IWatchdog.reload();
+        wdtFeed();
     }
 
     digitalWrite(INFO_LED, HIGH);

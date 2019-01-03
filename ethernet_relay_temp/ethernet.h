@@ -33,12 +33,16 @@ void mqttMsg(char* topic, uint8_t* payload, unsigned int length) {
         }
 
     } else if (strcmp(topic, MQTT_TOPIC_RESTART) == 0) {
+#if defined(NEW_CORE)
         HAL_NVIC_SystemReset();
+#else
+        nvic_sys_reset();
+#endif
     }
 }
 
 void mqttConnect() {
-    IWatchdog.reload();
+    wdtFeed();
 
 #if defined(ENABLE_DEBUG)
     debugPort.print("Connecting to MQTT (");
@@ -50,7 +54,7 @@ void mqttConnect() {
 #if defined(ENABLE_DEBUG)
         debugPort.println("connected");
 #endif
-        IWatchdog.reload();
+        wdtFeed();
         mqtt_fail_counter = 0;
 
         sendData(MQTT_TOPIC_WILL, MQTT_STATUS_ON, true);
@@ -65,11 +69,15 @@ void mqttConnect() {
         mqtt_fail_counter++;
 
         if (mqtt_fail_counter > MQTT_MAX_FAILED_CONNECTIONS) {
+#if defined(NEW_CORE)
             HAL_NVIC_SystemReset();
+#else
+            nvic_sys_reset();
+#endif
         }
     }
 
-    IWatchdog.reload();
+    wdtFeed();
 }
 
 String DisplayAddress(IPAddress address) {
@@ -102,7 +110,11 @@ void ethSetup() {
 #endif
         digitalWrite(INFO_LED, LOW);
 
+#if defined(NEW_CORE)
         HAL_NVIC_SystemReset();
+#else
+        nvic_sys_reset();
+#endif
 
     } else {
 #if defined(ENABLE_DEBUG)

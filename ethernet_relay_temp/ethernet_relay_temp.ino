@@ -19,8 +19,8 @@ SOFTWARE.
 */
 
 #include <climits>
-#include <IWatchdog.h>
-#include "settings.example.h"
+#include <watchdog.h>
+#include "settings.h"
 
 bool sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
 
@@ -32,7 +32,7 @@ uint32_t previousWillMillis = 0;
 uint32_t previousReadMillis = 0;
 uint32_t previousWdtMillis = 0;
 
-#if defined(ENABLE_DEBUG)
+#if defined(ENABLE_DEBUG) && defined(NEW_CORE)
     HardwareSerial debugPort(DEBUG_RX, DEBUG_TX);
 #endif
 
@@ -53,7 +53,7 @@ void setup() {
 
     ethSetup();
 
-    IWatchdog.begin(IWDG_TIMEOUT_MAX);
+    wdtSetup();
 
     // setup mqtt client
     mqttClient.setClient(ethClient);
@@ -63,13 +63,13 @@ void setup() {
 
     tempSetup();
 
-    previousSendMillis = previousWillMillis = millis();
+    previousSendMillis = previousWdtMillis = previousReadMillis = previousWillMillis = millis();
 }
 
 void loop() {
     if (millis() - previousWdtMillis >= WDT_INTERVAL) {
         previousWdtMillis = millis();
-        IWatchdog.reload();
+        wdtFeed();
     }
 
     if (millis() - previousReadMillis >= SENSORS_READ_INTERVAL) {

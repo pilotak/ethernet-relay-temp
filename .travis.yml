@@ -12,7 +12,7 @@ install:
   - platformio update
 
 script:
-  - platformio run
+  - platformio run -e ethernet-relay-temp-v1-debug -e ethernet-relay-temp-v1-debug-new -e ethernet-relay-temp-v1 -e ethernet-relay-temp-v1-new
 
 notifications:
   email:
