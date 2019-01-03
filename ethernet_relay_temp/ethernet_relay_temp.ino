@@ -20,7 +20,7 @@ SOFTWARE.
 
 #include <climits>
 #include <watchdog.h>
-#include "settings.h"
+#include "settings.example.h"
 
 bool sendData(const char * topic, const char * data, bool retain = false);  // compiler workaround
 
