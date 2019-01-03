@@ -101,7 +101,7 @@ void readTemp() {
         debugPort.println(tempC, 3);
 #endif
 
-        if (tempC >= -10) {
+        if (tempC > -127.0) {
             dHysteresis[i].add(dAverage[i].add(static_cast<int32_t>(tempC * 100)));
 
         } else {
@@ -202,7 +202,6 @@ void sendTemp() {
 
         snprintf(topic, sizeof(topic), "%s/%u", MQTT_TOPIC_ANALOG_TEMP, i);
 
-        debugPort.println(data);
         sendData(topic, data, true);
 
         wdtFeed();
