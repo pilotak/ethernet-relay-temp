@@ -1,3 +1,4 @@
 .piolibdeps
 .pioenvs
+.pio
 ethernet_relay_temp/settings.h
