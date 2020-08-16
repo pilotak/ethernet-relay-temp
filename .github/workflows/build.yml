@@ -40,7 +40,7 @@ jobs:
       - name: Build
         if: success()
         run: |
-          platformio run -e ethernet-relay-temp-v1
+          platformio run -e ethernet-relay-temp-v1 -e ethernet-relay-temp-v1-debug
 
       - name: Create release
         if: ${{ success() && steps.prepare.outputs.version != null }}
