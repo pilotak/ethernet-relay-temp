@@ -1,5 +1,6 @@
 # STM32F103C8 (BluePill) based temperature node with relay
-[![Build Status](https://travis-ci.org/pilotak/ethernet-relay-temp.svg?branch=master)](https://travis-ci.org/pilotak/ethernet-relay-temp)
+[![Build status](https://github.com/pilotak/ethernet-relay-temp/workflows/build/badge.svg)](https://github.com/pilotak/ethernet-relay-temp/actions)
+[![Framework Badge Arduino](https://img.shields.io/badge/framework-arduino-00979C.svg)](https://arduino.cc)
 
 ## Features
 - variable power supply: 5-15V (depends on relay coil)
